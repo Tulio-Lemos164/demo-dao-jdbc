@@ -33,10 +33,21 @@ public class Main {
             System.out.println(allSellers.get(i));
         }
 
+        //System.out.println();
+        //System.out.println("=== Test 4: Seller Insert ===");
+        //Seller newSeller = new Seller(null, "Vou ser apagado", "vouserapagado@gmail.com", LocalDate.parse("13/04/1969", fmt), 8500.00, new Department(3, "Fashion"));
+        //sellerDao.insert(newSeller);
+        //System.out.println("New Seller inserted! Id: " + newSeller.getId());
+
+        //System.out.println();
+        //System.out.println("=== Test 5: Seller Update ===");
+        //seller.setEmail("dwight@gmail.com");
+        //sellerDao.update(seller);
+        //System.out.println("Update Completed!");
+
         System.out.println();
-        System.out.println("=== Test 4: Seller Insert ===");
-        Seller newSeller = new Seller(null, "Pam Red", "pam@gmail.com", LocalDate.parse("13/04/1995", fmt), 8500.00, new Department(3, "Fashion"));
-        sellerDao.insert(newSeller);
-        System.out.println("New Seller inserted! Id: " + newSeller.getId());
+        System.out.println("=== Test 6: Seller Delete ===");
+        sellerDao.deleteById(11);
+        System.out.println("Deleted!");
     }
 }
