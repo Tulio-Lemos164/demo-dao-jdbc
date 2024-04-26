@@ -1,16 +1,16 @@
 package model.dao.impl;
 
 import db.DB;
+import db.DbException;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SellerDaoJDBC implements SellerDao {
 
@@ -22,7 +22,41 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void insert(Seller seller) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
 
+        try {
+            st = conn.prepareStatement("INSERT INTO seller "
+                            + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+                            + "VALUES "
+                            + "(?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
+
+            st.setString(1, seller.getName());
+            st.setString(2, seller.getEmail());
+            st.setDate(3, java.sql.Date.valueOf(seller.getBirthDate()));
+            st.setDouble(4, seller.getBaseSalary());
+            st.setInt(5, seller.getDepartment().getId());
+
+            int rowsAffected = st.executeUpdate();
+
+            if (rowsAffected > 0) {
+                rs = st.getGeneratedKeys();
+                if (rs.next()) {
+                    int id = rs.getInt(1);
+                    seller.setId(id);
+                }
+            } else {
+                throw new DbException("Unexpected Error! No rows affected");
+            }
+        }
+        catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -90,7 +124,42 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public List<Seller> findAll() {
-        return null;
+
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            st = conn.prepareStatement("SELECT seller.*,department.Name as DeptName "
+                    +"FROM seller INNER JOIN department "
+                    +"ON seller.DepartmentId = department.Id "
+                    +"ORDER BY Name");
+
+            rs = st.executeQuery();
+
+            List<Seller> myList = new ArrayList<>();
+            Map<Integer, Department> map = new HashMap<>();
+
+            while (rs.next()){
+
+                Department dept = map.get(rs.getInt("DepartmentId"));
+
+                if (dept == null){
+                    dept = instantiateDepartment(rs);
+                    map.put(rs.getInt("DepartmentId"), dept);
+                }
+
+                Seller seller = instantiateSeller(rs, dept);
+                myList.add(seller);
+            }
+            return myList;
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(st);
+        }
     }
 
     @Override
@@ -99,7 +168,7 @@ public class SellerDaoJDBC implements SellerDao {
         ResultSet rs = null;
 
         try {
-            st = conn.prepareStatement("SELECT seller.*,department.Name as DepName "
+            st = conn.prepareStatement("SELECT seller.*,department.Name as DeptName "
                     +"FROM seller INNER JOIN department "
                     +"ON seller.DepartmentId = department.Id "
                     +"WHERE DepartmentId = ? "
