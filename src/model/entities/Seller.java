@@ -12,7 +12,7 @@ public class Seller implements Serializable {
     private String name;
     private String email;
     private LocalDate birthDate;
-    private Double salary;
+    private Double baseSalary;
     private Department department;
 
     private static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyy");
@@ -20,12 +20,12 @@ public class Seller implements Serializable {
     public Seller() {
     }
 
-    public Seller(Integer id, String name, String email, LocalDate birthDate, Double salary, Department department) {
+    public Seller(Integer id, String name, String email, LocalDate birthDate, Double baseSalary, Department department) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.birthDate = birthDate;
-        this.salary = salary;
+        this.baseSalary = baseSalary;
         this.department = department;
     }
 
@@ -57,11 +57,11 @@ public class Seller implements Serializable {
         this.birthDate = birthDate;
     }
 
-    public Double getSalary() {
-        return salary;
+    public Double getBaseSalary() {
+        return baseSalary;
     }
-    public void setSalary(Double salary) {
-        this.salary = salary;
+    public void setBaseSalary(Double baseSalary) {
+        this.baseSalary = baseSalary;
     }
 
     public Department getDepartment() {
@@ -89,8 +89,8 @@ public class Seller implements Serializable {
                 ", name= '" + name + '\'' +
                 ", email= '" + email + '\'' +
                 ", birthDate= " + birthDate.format(fmt) +
-                ", salary= " + salary +
-                ", department= " + department +
+                ", salary= " + baseSalary +
+                ", department {" + department +
                 '}';
     }
 }
