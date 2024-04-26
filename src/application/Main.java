@@ -1,6 +1,7 @@
 package application;
 
 import model.dao.DaoFactory;
+import model.dao.DepartmentDao;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
@@ -12,6 +13,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+        /*
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         SellerDao sellerDao = DaoFactory.createSellerDao();
 
@@ -33,21 +35,51 @@ public class Main {
             System.out.println(allSellers.get(i));
         }
 
-        //System.out.println();
-        //System.out.println("=== Test 4: Seller Insert ===");
-        //Seller newSeller = new Seller(null, "Vou ser apagado", "vouserapagado@gmail.com", LocalDate.parse("13/04/1969", fmt), 8500.00, new Department(3, "Fashion"));
-        //sellerDao.insert(newSeller);
-        //System.out.println("New Seller inserted! Id: " + newSeller.getId());
+        System.out.println();
+        System.out.println("=== Test 4: Seller Insert ===");
+        Seller newSeller = new Seller(null, "Vou ser apagado", "vouserapagado@gmail.com", LocalDate.parse("13/04/1969", fmt), 8500.00, new Department(3, "Fashion"));
+        sellerDao.insert(newSeller);
+        System.out.println("New Seller inserted! Id: " + newSeller.getId());
 
-        //System.out.println();
-        //System.out.println("=== Test 5: Seller Update ===");
-        //seller.setEmail("dwight@gmail.com");
-        //sellerDao.update(seller);
-        //System.out.println("Update Completed!");
+        System.out.println();
+        System.out.println("=== Test 5: Seller Update ===");
+        seller.setEmail("dwight@gmail.com");
+        sellerDao.update(seller);
+        System.out.println("Update Completed!");
 
         System.out.println();
         System.out.println("=== Test 6: Seller Delete ===");
         sellerDao.deleteById(11);
+        System.out.println("Deleted!");
+        */
+        DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
+
+        System.out.println("=== Test 1: Find by Id ===");
+        Department department = departmentDao.findById(4);
+        System.out.println(department);
+
+        System.out.println();
+        System.out.println("=== Test 2: Find All ===");
+        List<Department> allDepartments = departmentDao.findAll();
+        for (int i = 0; i<allDepartments.size(); i++){
+            System.out.println(allDepartments.get(i));
+        }
+
+        System.out.println();
+        System.out.println("=== Test 3: Department Insert ===");
+        Department newDepartment = new Department(null, "Music");
+        departmentDao.insert(newDepartment);
+        System.out.println("New Department inserted! Id: " + newDepartment.getId());
+
+        System.out.println();
+        System.out.println("=== Test 4: Department Update ===");
+        department.setName("Books and Comics");
+        departmentDao.update(department);
+        System.out.println("Update Completed!");
+
+        System.out.println();
+        System.out.println("=== Test 5: Department Delete ===");
+        departmentDao.deleteById(7);
         System.out.println("Deleted!");
     }
 }

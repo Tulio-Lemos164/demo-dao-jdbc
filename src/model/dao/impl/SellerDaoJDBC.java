@@ -62,7 +62,6 @@ public class SellerDaoJDBC implements SellerDao {
     @Override
     public void update(Seller seller) {
         PreparedStatement st = null;
-        ResultSet rs = null;
 
         try {
             st = conn.prepareStatement("UPDATE seller "
@@ -82,7 +81,6 @@ public class SellerDaoJDBC implements SellerDao {
             throw new DbException(e.getMessage());
         }
         finally {
-            DB.closeResultSet(rs);
             DB.closeStatement(st);
         }
     }
@@ -161,7 +159,6 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public List<Seller> findAll() {
-
         PreparedStatement st = null;
         ResultSet rs = null;
 
